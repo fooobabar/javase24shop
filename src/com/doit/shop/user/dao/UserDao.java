@@ -8,14 +8,16 @@ public interface UserDao {
 
 	/**
 	 * 增 往数据库增加一个用户
+	 * @throws Exception 
 	 */
 	
-	public boolean addUser(User user);
+	public boolean addUser(User user) throws Exception;
 	
 	/**
 	 * 移除一个用户
+	 * @throws Exception 
 	 */
-	public boolean removeUser(String account);
+	public boolean removeUser(String account) throws Exception;
 	
 	/**
 	 * 修改用户：要求service层把要修改的用户的所有数据全传过来
@@ -23,17 +25,25 @@ public interface UserDao {
 	public boolean updateUser(User user);
 	
 	/**
-	 * 查，根据账号查询用户
+	 * 查，判断用户是否存在
+	 * @throws Exception 
 	 */
-	public User getUserByAccount(String account);
+	public boolean checkUserIfExistsById(String account) throws Exception;
+	
+	/**
+	 * 查，根据账号查询用户
+	 * @throws Exception 
+	 */
+	public User getUserByAccount(String account) throws Exception;
 	
 	/**
 	 * 查，根据年龄范围查询用户
 	 * @param maxAge 最大年龄
 	 * @param minAge 最小年龄
 	 * @return 用户List
+	 * @throws Exception 
 	 */
-	public List<User> getUserByAgeRange(int maxAge,int minAge);
+	public List<User> getUserByAgeRange(int maxAge,int minAge) throws Exception;
 	
 	/**
 	 * 根据vip等级范围查询用户
