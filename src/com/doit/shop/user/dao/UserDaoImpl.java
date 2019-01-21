@@ -1,64 +1,48 @@
 package com.doit.shop.user.dao;
 
-import java.io.File;
+import java.io.File;	
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInput;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
-import java.sql.DatabaseMetaData;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
 import com.doit.shop.constant.DataBasePathConstant;
 import com.doit.shop.user.service.User;
+import com.doit.shop.util.FileOperateUtil;
 
 public class UserDaoImpl implements UserDao {
 	
+	FileOperateUtil<User> util = new FileOperateUtil<User>();
 	
 	@Override
 	public boolean addUser(User user) throws Exception {
 		HashMap<String, User> userMap = new HashMap<>();
-		File file = new File(DataBasePathConstant.USER_DATA_PATH);
-		if(file.exists() && !this.checkUserIfExistsById(user.getAccount())){
-			userMap.put(user.getAccount(), user);
-			ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(DataBasePathConstant.USER_DATA_PATH));
-			oos.writeObject(userMap);
-			oos.close();
-			
-			return true;
-		}else{
-			userMap.put(user.getAccount(), user);
-			ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(DataBasePathConstant.USER_DATA_PATH));
-			oos.writeObject(userMap);
-			oos.close();
+		userMap.put(user.getAccount(), user);
+		
+		if(this.checkUserIfExistsById(user.getAccount())){
+			return false;
 		}
-		return false;
+		util.writeToDB(DataBasePathConstant.USER_DATA_PATH, userMap); 
+		return this.checkUserIfExistsById(user.getAccount());
 	}
 
 	@Override
 	public boolean removeUser(String account) throws Exception { 
 		File file = new File(DataBasePathConstant.USER_DATA_PATH);
-		if(file.exists()){
-			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(DataBasePathConstant.USER_DATA_PATH));
-			
-			HashMap<String, User> userMap = (HashMap<String, User>)ois.readObject();
-			ois.close();
-			
-			User user = userMap.remove(account);
-			if(user != null){
-				ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(DataBasePathConstant.USER_DATA_PATH));
-				oos.writeObject(userMap);
-				oos.close();
-				return true;
-			}
+		if(!file.exists()){
 			return false;
 		}
-		return false;
+		
+		HashMap<String,User> userMap=util.readFromDB(DataBasePathConstant.USER_DATA_PATH);
+
+		userMap.remove(account);
+		
+		return this.checkUserIfExistsById(account);
+		
 	}
 
 	@Override
@@ -71,10 +55,9 @@ public class UserDaoImpl implements UserDao {
 	public User getUserByAccount(String account) throws Exception {
 		File file = new File(DataBasePathConstant.USER_DATA_PATH);
 		if (file.exists()){
-			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(DataBasePathConstant.USER_DATA_PATH));
 			
-			HashMap<String, User> userMap = (HashMap<String, User>)ois.readObject();
-			ois.close();
+			HashMap<String, User> userMap = util.readFromDB(DataBasePathConstant.USER_DATA_PATH);
+
 			return userMap.get(account);
 		} 
 		return null;
@@ -82,8 +65,18 @@ public class UserDaoImpl implements UserDao {
 
 	@Override
 	public List<User> getUserByAgeRange(int maxAge, int minAge) throws Exception {
-		ObjectInputStream ois = new ObjectInputStream(new FileInputStream(DataBasePathConstant.USER_DATA_PATH));
-		return null;
+		HashMap<String, User> userMap = util.readFromDB(DataBasePathConstant.USER_DATA_PATH);
+		ArrayList<User> uList = new ArrayList<User>();
+		
+		Collection<User> values = userMap.values();
+		
+		for (User user : values) {
+			if(user.getAge() >= minAge && user.getAge() <= maxAge){
+				uList.add(user);
+			}
+		}
+		
+		return uList;
 	}
 
 	@Override
@@ -103,10 +96,7 @@ public class UserDaoImpl implements UserDao {
 		
 		File file = new File(DataBasePathConstant.USER_DATA_PATH);
 		if (file.exists()){
-			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(DataBasePathConstant.USER_DATA_PATH));
-			
-			HashMap<String, User> userMap = (HashMap<String, User>)ois.readObject();
-			ois.close();
+			HashMap<String, User> userMap = util.readFromDB(DataBasePathConstant.USER_DATA_PATH);
 			return userMap.containsKey(account);
 		}
 		return false;
