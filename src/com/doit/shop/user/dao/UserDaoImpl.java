@@ -46,9 +46,14 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	@Override
-	public boolean updateUser(User user) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean updateUser(User user) throws Exception {
+		HashMap<String, User> userMap = util.readFromDB(DataBasePathConstant.USER_DATA_PATH);
+		
+		userMap.put(user.getAccount(), user);
+		
+		util.writeToDB(DataBasePathConstant.USER_DATA_PATH, userMap);
+
+		return checkUserIfExistsById(user.getAccount());
 	}
 
 	@Override
@@ -80,15 +85,29 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	@Override
-	public List<User> getUserByVipRange(int maxVip, int minVip) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<User> getUserByVipRange(int maxVip, int minVip) throws Exception {
+		HashMap<String, User> userMap=util.readFromDB(DataBasePathConstant.USER_DATA_PATH);
+		ArrayList<User> uList = new ArrayList<>();
+		Collection<User> values = userMap.values();
+		for (User user : values) {
+			if(user.getVipLevel() >= minVip && user.getVipLevel() <= maxVip){
+				uList.add(user);
+			}
+		}
+		return uList;
 	}
 
 	@Override
-	public List<User> getUserByName(String name) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<User> getUserByName(String name) throws Exception {
+		HashMap<String, User> userMap=util.readFromDB(DataBasePathConstant.USER_DATA_PATH);
+		ArrayList<User> uList = new ArrayList<>();
+		Collection<User> values = userMap.values();
+		for (User user : values) {
+			if(user.getName()== name){
+				uList.add(user);
+			}
+		}
+		return uList;
 	}
  
 	@Override

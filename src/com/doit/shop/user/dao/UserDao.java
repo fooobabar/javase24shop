@@ -21,8 +21,9 @@ public interface UserDao {
 	
 	/**
 	 * 修改用户：要求service层把要修改的用户的所有数据全传过来
+	 * @throws Exception 
 	 */
-	public boolean updateUser(User user);
+	public boolean updateUser(User user) throws Exception;
 	
 	/**
 	 * 查，判断用户是否存在
@@ -49,13 +50,15 @@ public interface UserDao {
 	 * 根据vip等级范围查询用户
 	 * @param maxVip 最大vip等级
 	 * @param minVip 最小vip等级
+	 * @throws Exception 
 	 */
-	public List<User> getUserByVipRange(int maxVip,int minVip);
+	public List<User> getUserByVipRange(int maxVip,int minVip) throws Exception;
 	
 	/**
 	 * 根据名字查询用户
 	 * @param name 传入name
 	 * @return 返回用户列表
+	 * @throws Exception 
 	 */
-	public List<User> getUserByName(String name);
+	public List<User> getUserByName(String name) throws Exception;
 }

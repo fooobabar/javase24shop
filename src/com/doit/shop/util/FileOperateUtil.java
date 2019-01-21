@@ -18,6 +18,7 @@ public class FileOperateUtil<T> {
 		ois.close();
 		return objMap;
 	}
+	
 	public void writeToDB(String dbpath,HashMap<String, T> objMap) throws Exception{
 		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(dbpath));
 		
