@@ -2,7 +2,7 @@ package com.doit.shop.user.dao;
 
 import java.util.List;
 
-import com.doit.shop.user.service.User;
+import com.doit.shop.user.User;
 
 public interface UserDao {
 

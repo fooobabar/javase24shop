@@ -2,9 +2,9 @@ package com.doit.shop.Test;
 
 import org.junit.Test;
 
+import com.doit.shop.user.User;
 import com.doit.shop.user.dao.UserDao;
 import com.doit.shop.user.dao.UserDaoImpl;
-import com.doit.shop.user.service.User;
 
 public class TestUser {
 	

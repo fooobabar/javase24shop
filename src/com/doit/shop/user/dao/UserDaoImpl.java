@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.doit.shop.constant.DataBasePathConstant;
-import com.doit.shop.user.service.User;
+import com.doit.shop.user.User;
 import com.doit.shop.util.FileOperateUtil;
 
 public class UserDaoImpl implements UserDao {
